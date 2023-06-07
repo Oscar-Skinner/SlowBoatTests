@@ -8,24 +8,26 @@ public class Buoyancy : MonoBehaviour
 	public float forceScalar;
 	public float waterLineHack; // HACK
 
-	public int underwaterVerts;
+	private int underwaterVerts;
 	public float dragScalar;
 
 	public static event Action<GameObject, Vector3, Vector3> OnSplash;
 	public static event Action<GameObject> OnDestroyed;
 
-	Vector3 worldVertPos;
+	private Vector3 worldVertPos;
 
 	public Rigidbody rb;
 	public Mesh meshFilterMesh;
 
-	public Vector3[] meshVerticies;
-	public Vector3[] meshNormals;
+	private Vector3[] meshVerticies;
+	private Vector3[] meshNormals;
+	private Vector3 rbVelocity;
 
 	private void Awake()
 	{
 		meshVerticies = meshFilterMesh.vertices;
 		meshNormals = meshFilterMesh.normals;
+		rbVelocity = rb.velocity;
 	}
 
 	void Update()
@@ -45,12 +47,12 @@ public class Buoyancy : MonoBehaviour
 				// Splashes only on surface of water plane
 				if (worldVertPos.y > waterLineHack - 0.1f)
 				{
-					if (rb.velocity.magnitude > splashVelocityThreshold || rb.angularVelocity.magnitude > splashVelocityThreshold)
+					if (rbVelocity.magnitude > splashVelocityThreshold || rb.angularVelocity.magnitude > splashVelocityThreshold)
 					{
-						print(rb.velocity.magnitude);
+						print(rbVelocity.magnitude);
 						if (OnSplash != null)
 						{
-							OnSplash.Invoke(gameObject, worldVertPos, rb.velocity);
+							OnSplash.Invoke(gameObject, worldVertPos, rbVelocity);
 						}
 					}
 				}

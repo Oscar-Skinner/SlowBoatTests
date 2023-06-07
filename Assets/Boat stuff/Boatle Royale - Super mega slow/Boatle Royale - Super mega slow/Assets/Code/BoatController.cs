@@ -20,7 +20,7 @@ public class BoatController : MonoBehaviour
 		if (motor.position.y < Buoyancy.waterLineHack)
 		{
 			//			Rigidbody.AddRelativeForce(0,0,speed * (underwaterVerts / (float)totalVerts));
-			Rigidbody.AddForceAtPosition(motor.transform.forward * speed * Time.deltaTime * Input.GetAxis("Vertical"),
+			Rigidbody.AddForceAtPosition(motor.forward * speed * Time.deltaTime * Input.GetAxis("Vertical"),
 				motor.position + new Vector3(0, 0.25f, 0)); // HACK: Offset hack to stop the boat flipping all the time!
 		}
 	}
