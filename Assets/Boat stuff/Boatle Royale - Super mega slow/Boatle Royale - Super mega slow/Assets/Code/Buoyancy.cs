@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using UnityEngine;
 
 // Cams mostly hack buoyancy
@@ -19,15 +20,23 @@ public class Buoyancy : MonoBehaviour
 	public Rigidbody rb;
 	public Mesh meshFilterMesh;
 
+	
 	private Vector3[] meshVerticies;
 	private Vector3[] meshNormals;
 	private Vector3 rbVelocity;
+	//private Vector3 transPos;
+	private float rbDragValue;
+	private Vector3 forceAmount;
+	private Vector3 forcePosition;
+	private int meshNormalsLength;
 
 	private void Awake()
 	{
 		meshVerticies = meshFilterMesh.vertices;
 		meshNormals = meshFilterMesh.normals;
 		rbVelocity = rb.velocity;
+		//transPos = transform.position;
+		meshNormalsLength = meshNormals.Length;
 	}
 
 	void Update()
@@ -39,7 +48,7 @@ public class Buoyancy : MonoBehaviour
 	{
 		underwaterVerts = 0;
 
-		for (var index = 0; index < meshNormals.Length; index++)
+		for (var index = 0; index < meshNormalsLength; index++)
 		{
 			worldVertPos = transform.position + transform.TransformDirection(meshVerticies[index]);
 			if (worldVertPos.y < waterLineHack)
@@ -49,15 +58,15 @@ public class Buoyancy : MonoBehaviour
 				{
 					if (rbVelocity.magnitude > splashVelocityThreshold || rb.angularVelocity.magnitude > splashVelocityThreshold)
 					{
-						print(rbVelocity.magnitude);
+						//print(rbVelocity.magnitude);
 						if (OnSplash != null)
 						{
 							OnSplash.Invoke(gameObject, worldVertPos, rbVelocity);
 						}
 					}
 				}
-				Vector3	forceAmount = (transform.TransformDirection(-meshNormals[index]) * forceScalar) * Time.deltaTime;
-				Vector3 forcePosition = transform.position + transform.TransformDirection(meshVerticies[index]);
+				forceAmount = (transform.TransformDirection(-meshNormals[index]) * forceScalar) * Time.deltaTime;
+				forcePosition = transform.position + transform.TransformDirection(meshVerticies[index]);
 				rb.AddForceAtPosition(forceAmount, forcePosition, ForceMode.Force);
 				underwaterVerts++;
 			}
@@ -68,8 +77,9 @@ public class Buoyancy : MonoBehaviour
 				break;
 			}
 			// Drag for percentage underwater
-			rb.drag = (underwaterVerts / (float)meshVerticies.Length) * dragScalar;
-			rb.angularDrag = (underwaterVerts / (float)meshVerticies.Length) * dragScalar;
+			rbDragValue = (underwaterVerts / (float)meshVerticies.Length) * dragScalar;
+			rb.drag = rbDragValue;
+			rb.angularDrag = rbDragValue;
 		}
 	}
 
@@ -79,6 +89,15 @@ public class Buoyancy : MonoBehaviour
 		{
 			OnDestroyed.Invoke(gameObject);
 		}
+		
+		//maybe a coroutine to destroy it :shrug:
+		gameObject.SetActive(false);
+		DestroyTheObject();
+	}
+
+	private IEnumerator DestroyTheObject()
+	{
+		yield return new WaitForSeconds(1);
 		Destroy(gameObject);
 	}
 }
