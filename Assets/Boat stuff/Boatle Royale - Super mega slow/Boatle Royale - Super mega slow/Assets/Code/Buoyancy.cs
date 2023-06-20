@@ -5,11 +5,11 @@ using UnityEngine;
 // Cams mostly hack buoyancy
 public class Buoyancy : MonoBehaviour
 {
-	public float splashVelocityThreshold;
+	public byte splashVelocityThreshold;
 	public float forceScalar;
-	public float waterLineHack; // HACK
+	public byte waterLineHack; // HACK
 
-	private int underwaterVerts;
+	private byte underwaterVerts;
 	public float dragScalar;
 
 	public static event Action<GameObject, Vector3, Vector3> OnSplash;
@@ -24,33 +24,36 @@ public class Buoyancy : MonoBehaviour
 	private Vector3[] meshVerticies;
 	private Vector3[] meshNormals;
 	private Vector3 rbVelocity;
-	//private Vector3 transPos;
+	
+	private Vector3 transformPos;
+	
 	private float rbDragValue;
 	private Vector3 forceAmount;
 	private Vector3 forcePosition;
-	private int meshNormalsLength;
+	private byte meshNormalsLength;
 
 	private void Awake()
 	{
 		meshVerticies = meshFilterMesh.vertices;
 		meshNormals = meshFilterMesh.normals;
 		rbVelocity = rb.velocity;
-		//transPos = transform.position;
-		meshNormalsLength = meshNormals.Length;
+		meshNormalsLength = (byte)meshNormals.Length;
 	}
 
 	void Update()
 	{
+		transformPos = transform.position;
 		CalculateForces();
 	}
 
+	
 	private void CalculateForces()
 	{
 		underwaterVerts = 0;
 
-		for (var index = 0; index < meshNormalsLength; index++)
+		for (byte index = 0; index < meshNormalsLength; index++)
 		{
-			worldVertPos = transform.position + transform.TransformDirection(meshVerticies[index]);
+			worldVertPos = transformPos + transform.TransformDirection(meshVerticies[index]);
 			if (worldVertPos.y < waterLineHack)
 			{
 				// Splashes only on surface of water plane
@@ -66,7 +69,7 @@ public class Buoyancy : MonoBehaviour
 					}
 				}
 				forceAmount = (transform.TransformDirection(-meshNormals[index]) * forceScalar) * Time.deltaTime;
-				forcePosition = transform.position + transform.TransformDirection(meshVerticies[index]);
+				forcePosition = transformPos + transform.TransformDirection(meshVerticies[index]);
 				rb.AddForceAtPosition(forceAmount, forcePosition, ForceMode.Force);
 				underwaterVerts++;
 			}
@@ -91,13 +94,7 @@ public class Buoyancy : MonoBehaviour
 		}
 		
 		//maybe a coroutine to destroy it :shrug:
+		Destroyer.boatsToDestroy.Add(gameObject);
 		gameObject.SetActive(false);
-		DestroyTheObject();
-	}
-
-	private IEnumerator DestroyTheObject()
-	{
-		yield return new WaitForSeconds(1);
-		Destroy(gameObject);
 	}
 }

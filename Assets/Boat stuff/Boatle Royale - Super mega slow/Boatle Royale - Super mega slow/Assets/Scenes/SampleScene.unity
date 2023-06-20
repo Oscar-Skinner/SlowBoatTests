@@ -5719,6 +5719,7 @@ GameObject:
   m_Component:
   - component: {fileID: 747389648}
   - component: {fileID: 747389647}
+  - component: {fileID: 747389649}
   m_Layer: 0
   m_Name: Spawner - This many boats
   m_TagString: Untagged
@@ -5759,6 +5760,18 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &747389649
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 747389646}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4138070d391739c4ab803f4c921ebe15, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &751715795
 GameObject:
   m_ObjectHideFlags: 0
@@ -6106,6 +6119,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1328249928}
   - component: {fileID: 1328249927}
+  - component: {fileID: 1328249929}
   m_Layer: 0
   m_Name: Spawner - Lots, random rotations and velocity
   m_TagString: Untagged
@@ -6146,6 +6160,18 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1328249929
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1328249926}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4138070d391739c4ab803f4c921ebe15, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1372850105
 GameObject:
   m_ObjectHideFlags: 0
@@ -7043,6 +7069,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2087781526}
   - component: {fileID: 2087781525}
+  - component: {fileID: 2087781527}
   m_Layer: 0
   m_Name: Spawner
   m_TagString: Untagged
@@ -7083,6 +7110,18 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2087781527
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2087781524}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4138070d391739c4ab803f4c921ebe15, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2105551207
 GameObject:
   m_ObjectHideFlags: 0
