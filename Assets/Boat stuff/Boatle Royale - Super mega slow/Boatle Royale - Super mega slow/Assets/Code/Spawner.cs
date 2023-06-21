@@ -25,15 +25,16 @@ public class Spawner : MonoBehaviour
 	private void Spawn()
 	{
 		GameObject o = Instantiate(prefab, transform.position + new Vector3(Random.Range(-randomAmount, randomAmount), Random.Range(-randomAmount, randomAmount)/2f, Random.Range(-randomAmount, randomAmount)), Quaternion.Euler(new Vector3(Random.Range(rotationMin, rotationMax), Random.Range(rotationMin, rotationMax), Random.Range(rotationMin, rotationMax))));
+		Rigidbody objRb = o.GetComponent<Rigidbody>();
 		if (Random.value > 0.3f)
 		{
-			o.GetComponent<Rigidbody>().velocity = new Vector3(Random.Range(-randomThrowAmount, randomThrowAmount), 0,
+			objRb.velocity = new Vector3(Random.Range(-randomThrowAmount, randomThrowAmount), 0,
 				Random.Range(-randomThrowAmount, randomThrowAmount));
 		}
 
 		if (Random.value > 0.5f)
 		{
-			o.GetComponent<Rigidbody>().angularVelocity = new Vector3(Random.Range(-randomThrowAmount, randomThrowAmount), Random.Range(-randomThrowAmount, randomThrowAmount), Random.Range(-randomThrowAmount, randomThrowAmount));
+			objRb.angularVelocity = new Vector3(Random.Range(-randomThrowAmount, randomThrowAmount), Random.Range(-randomThrowAmount, randomThrowAmount), Random.Range(-randomThrowAmount, randomThrowAmount));
 		}
 	}
 

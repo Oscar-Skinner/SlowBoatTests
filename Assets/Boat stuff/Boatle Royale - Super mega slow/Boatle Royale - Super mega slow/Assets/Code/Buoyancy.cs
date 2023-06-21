@@ -26,9 +26,8 @@ public class Buoyancy : MonoBehaviour
 	private Vector3 rbVelocity;
 	
 	private Vector3 transformPos;
-	
 	private float rbDragValue;
-	private Vector3 forceAmount;
+	public Vector3 forceAmount;
 	private Vector3 forcePosition;
 	private byte meshNormalsLength;
 
@@ -68,7 +67,8 @@ public class Buoyancy : MonoBehaviour
 						}
 					}
 				}
-				forceAmount = (transform.TransformDirection(-meshNormals[index]) * forceScalar) * Time.deltaTime;
+				forceAmount = transform.TransformDirection(-meshNormals[index]) * (forceScalar * Time.deltaTime);
+				//TransformTheDirectionManaul(index);
 				forcePosition = transformPos + transform.TransformDirection(meshVerticies[index]);
 				rb.AddForceAtPosition(forceAmount, forcePosition, ForceMode.Force);
 				underwaterVerts++;
@@ -86,6 +86,15 @@ public class Buoyancy : MonoBehaviour
 		}
 	}
 
+	// void TransformTheDirectionManaul(byte index)
+	// {
+	// 	Vector3 localDirection = -meshNormals[index];
+	// 	forceAmount = new Vector3(
+	// 		localDirection.x * (forceScalar * Time.deltaTime),
+	// 		localDirection.y * (forceScalar * Time.deltaTime),
+	// 		localDirection.z * (forceScalar * Time.deltaTime));
+	// }
+	
 	private void DestroyParentGO()
 	{
 		if (OnDestroyed != null)
