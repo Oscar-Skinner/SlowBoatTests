@@ -67,7 +67,8 @@ public class Buoyancy : MonoBehaviour
 						}
 					}
 				}
-				forceAmount = transform.TransformDirection(-meshNormals[index]) * (forceScalar * Time.deltaTime);
+				forceAmount = -meshNormals[index] * (forceScalar * Time.deltaTime);
+				//forceAmount = transform.TransformDirection(-meshNormals[index]) * (forceScalar * Time.deltaTime);
 				//TransformTheDirectionManaul(index);
 				forcePosition = transformPos + transform.TransformDirection(meshVerticies[index]);
 				rb.AddForceAtPosition(forceAmount, forcePosition, ForceMode.Force);
