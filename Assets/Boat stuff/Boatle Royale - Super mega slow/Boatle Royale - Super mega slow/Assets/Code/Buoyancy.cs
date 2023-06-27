@@ -12,24 +12,25 @@ public class Buoyancy : MonoBehaviour
 	private byte underwaterVerts;
 	public float dragScalar;
 
-	public static event Action<GameObject, Vector3, Vector3> OnSplash;
-	public static event Action<GameObject> OnDestroyed;
+	public static Action<GameObject, Vector3, Vector3> OnSplash;
+	public static Action<GameObject> OnDestroyed;
 
 	private Vector3 worldVertPos;
 
 	public Rigidbody rb;
 	public Mesh meshFilterMesh;
-
 	
 	private Vector3[] meshVerticies;
 	private Vector3[] meshNormals;
 	private Vector3 rbVelocity;
 	
 	private Vector3 transformPos;
+	private Quaternion transformRotate;
 	private float rbDragValue;
 	public Vector3 forceAmount;
 	private Vector3 forcePosition;
 	private byte meshNormalsLength;
+	private int meshVerticiesLength;
 
 	private void Awake()
 	{
@@ -37,14 +38,15 @@ public class Buoyancy : MonoBehaviour
 		meshNormals = meshFilterMesh.normals;
 		rbVelocity = rb.velocity;
 		meshNormalsLength = (byte)meshNormals.Length;
+		meshVerticiesLength = meshVerticies.Length;
 	}
 
 	void Update()
 	{
 		transformPos = transform.position;
+		transformRotate = transform.rotation;
 		CalculateForces();
 	}
-
 	
 	private void CalculateForces()
 	{
@@ -52,58 +54,38 @@ public class Buoyancy : MonoBehaviour
 
 		for (byte index = 0; index < meshNormalsLength; index++)
 		{
-			worldVertPos = transformPos + transform.TransformDirection(meshVerticies[index]);
-			if (worldVertPos.y < waterLineHack)
+			worldVertPos = transformPos + (transformRotate * meshVerticies[index]);
+
+			// Splashes only on surface of water plane
+			if (worldVertPos.y < waterLineHack - 0.1f)
 			{
-				// Splashes only on surface of water plane
-				if (worldVertPos.y > waterLineHack - 0.1f)
+				if (rbVelocity.magnitude > splashVelocityThreshold || rb.angularVelocity.magnitude > splashVelocityThreshold)
 				{
-					if (rbVelocity.magnitude > splashVelocityThreshold || rb.angularVelocity.magnitude > splashVelocityThreshold)
-					{
-						//print(rbVelocity.magnitude);
-						if (OnSplash != null)
-						{
-							OnSplash.Invoke(gameObject, worldVertPos, rbVelocity);
-						}
-					}
+					OnSplash.Invoke(gameObject, worldVertPos, rbVelocity);
 				}
+				
 				forceAmount = -meshNormals[index] * (forceScalar * Time.deltaTime);
-				//forceAmount = transform.TransformDirection(-meshNormals[index]) * (forceScalar * Time.deltaTime);
-				//TransformTheDirectionManaul(index);
-				forcePosition = transformPos + transform.TransformDirection(meshVerticies[index]);
-				rb.AddForceAtPosition(forceAmount, forcePosition, ForceMode.Force);
-				underwaterVerts++;
+                forcePosition = transformPos + (transformRotate * meshVerticies[index]);
+                rb.AddForceAtPosition(forceAmount, forcePosition, ForceMode.Force);
+                underwaterVerts++;
 			}
-			// HACK to remove sunken boats
-			if (worldVertPos.y < waterLineHack - 10f)
+			
+			if (worldVertPos.y < waterLineHack - 10f) // HACK to remove sunken boats
 			{
 				DestroyParentGO();
 				break;
 			}
+
 			// Drag for percentage underwater
-			rbDragValue = (underwaterVerts / (float)meshVerticies.Length) * dragScalar;
+			rbDragValue = (underwaterVerts / (float)meshVerticiesLength) * dragScalar;
 			rb.drag = rbDragValue;
 			rb.angularDrag = rbDragValue;
 		}
 	}
 
-	// void TransformTheDirectionManaul(byte index)
-	// {
-	// 	Vector3 localDirection = -meshNormals[index];
-	// 	forceAmount = new Vector3(
-	// 		localDirection.x * (forceScalar * Time.deltaTime),
-	// 		localDirection.y * (forceScalar * Time.deltaTime),
-	// 		localDirection.z * (forceScalar * Time.deltaTime));
-	// }
-	
 	private void DestroyParentGO()
 	{
-		if (OnDestroyed != null)
-		{
-			OnDestroyed.Invoke(gameObject);
-		}
-		
-		//maybe a coroutine to destroy it :shrug:
+		OnDestroyed.Invoke(gameObject);
 		Destroyer.boatsToDestroy.Add(gameObject);
 		gameObject.SetActive(false);
 	}
