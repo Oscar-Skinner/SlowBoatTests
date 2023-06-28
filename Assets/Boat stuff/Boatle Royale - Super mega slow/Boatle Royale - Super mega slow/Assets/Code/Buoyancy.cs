@@ -59,11 +59,11 @@ public class Buoyancy : MonoBehaviour
 			// Splashes only on surface of water plane
 			if (worldVertPos.y < waterLineHack - 0.1f)
 			{
-				if (rbVelocity.magnitude > splashVelocityThreshold || rb.angularVelocity.magnitude > splashVelocityThreshold)
-				{
-					OnSplash.Invoke(gameObject, worldVertPos, rbVelocity);
-				}
-				
+				// if (rbVelocity.magnitude > splashVelocityThreshold || rb.angularVelocity.magnitude > splashVelocityThreshold)
+				// {
+				// 	OnSplash.Invoke(gameObject, worldVertPos, rbVelocity);
+				// }
+				//
 				forceAmount = -meshNormals[index] * (forceScalar * Time.deltaTime);
                 forcePosition = transformPos + (transformRotate * meshVerticies[index]);
                 rb.AddForceAtPosition(forceAmount, forcePosition, ForceMode.Force);
