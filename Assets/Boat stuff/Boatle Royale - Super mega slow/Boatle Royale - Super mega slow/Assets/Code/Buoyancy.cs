@@ -1,34 +1,35 @@
 ﻿using System;
 using System.Collections;
 using UnityEngine;
+using Unity.Mathematics;
 
 // Cams mostly hack buoyancy
 public class Buoyancy : MonoBehaviour
 {
-	public byte splashVelocityThreshold;
+	//public byte splashVelocityThreshold;
 	public float forceScalar;
 	public byte waterLineHack; // HACK
 
 	private byte underwaterVerts;
 	public float dragScalar;
 
-	public static Action<GameObject, Vector3, Vector3> OnSplash;
-	public static Action<GameObject> OnDestroyed;
+	//public static Action<GameObject, Vector3, Vector3> OnSplash;
+	//public static Action<GameObject> OnDestroyed;
 
-	private Vector3 worldVertPos;
+	private float3 worldVertPos;
 
 	public Rigidbody rb;
 	public Mesh meshFilterMesh;
 	
 	private Vector3[] meshVerticies;
 	private Vector3[] meshNormals;
-	private Vector3 rbVelocity;
+	//private float3 rbVelocity;
 	
 	private Vector3 transformPos;
 	private Quaternion transformRotate;
 	private float rbDragValue;
-	public Vector3 forceAmount;
-	private Vector3 forcePosition;
+	public float3 forceAmount;
+	private float3 forcePosition;
 	private byte meshNormalsLength;
 	private int meshVerticiesLength;
 
@@ -36,7 +37,7 @@ public class Buoyancy : MonoBehaviour
 	{
 		meshVerticies = meshFilterMesh.vertices;
 		meshNormals = meshFilterMesh.normals;
-		rbVelocity = rb.velocity;
+		//rbVelocity = rb.velocity;
 		meshNormalsLength = (byte)meshNormals.Length;
 		meshVerticiesLength = meshVerticies.Length;
 	}
@@ -52,6 +53,8 @@ public class Buoyancy : MonoBehaviour
 	{
 		underwaterVerts = 0;
 
+		//start threading now
+		
 		for (byte index = 0; index < meshNormalsLength; index++)
 		{
 			worldVertPos = transformPos + (transformRotate * meshVerticies[index]);
@@ -63,7 +66,7 @@ public class Buoyancy : MonoBehaviour
 				// {
 				// 	OnSplash.Invoke(gameObject, worldVertPos, rbVelocity);
 				// }
-				//
+				
 				forceAmount = -meshNormals[index] * (forceScalar * Time.deltaTime);
                 forcePosition = transformPos + (transformRotate * meshVerticies[index]);
                 rb.AddForceAtPosition(forceAmount, forcePosition, ForceMode.Force);
@@ -85,7 +88,7 @@ public class Buoyancy : MonoBehaviour
 
 	private void DestroyParentGO()
 	{
-		OnDestroyed.Invoke(gameObject);
+		//OnDestroyed.Invoke(gameObject);
 		Destroyer.boatsToDestroy.Add(gameObject);
 		gameObject.SetActive(false);
 	}

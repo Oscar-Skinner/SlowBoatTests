@@ -16,8 +16,8 @@ public class SplashManager : MonoBehaviour
 	// Use this for initialization
 	void Start()
 	{
-		Buoyancy.OnSplash += OnSplash;
-		Buoyancy.OnDestroyed += SplashSourceOnDestroyed;
+		//Buoyancy.OnSplash += OnSplash;
+		//Buoyancy.OnDestroyed += SplashSourceOnDestroyed;
 
 		emitParams = new ParticleSystem.EmitParams();
 
@@ -27,7 +27,7 @@ public class SplashManager : MonoBehaviour
 
 	private void SplashSourceOnDestroyed(GameObject obj)
 	{
-		//        Buoyancy.OnSplash -=;
+		        //Buoyancy.OnSplash -=;
 	}
 
 	private void OnSplash(GameObject o, Vector3 worldPos, Vector3 velocity)
@@ -37,7 +37,7 @@ public class SplashManager : MonoBehaviour
 			emitParams.position = worldPos + new Vector3(0, 0.1f, 0);
 			emitParams.velocity = new Vector3(velocity.x, -velocity.y, velocity.z) / 2f;
 			SplashesParticleSystem.Emit(emitParams, 1);
-
+	
 			float velocitySqrMagnitude = velocity.sqrMagnitude;
 			if(velocitySqrMagnitude > 10f)
 			{
