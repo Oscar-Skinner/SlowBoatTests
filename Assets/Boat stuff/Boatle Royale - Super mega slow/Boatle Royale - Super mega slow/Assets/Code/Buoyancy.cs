@@ -2,6 +2,8 @@
 using System.Collections;
 using UnityEngine;
 using Unity.Mathematics;
+using System.Threading;
+using System.Threading.Tasks;
 
 // Cams mostly hack buoyancy
 public class Buoyancy : MonoBehaviour
@@ -39,7 +41,7 @@ public class Buoyancy : MonoBehaviour
 		meshNormals = meshFilterMesh.normals;
 		//rbVelocity = rb.velocity;
 		meshNormalsLength = (byte)meshNormals.Length;
-		meshVerticiesLength = meshVerticies.Length;
+		meshVerticiesLength = (byte)meshVerticies.Length;
 	}
 
 	void Update()
@@ -53,20 +55,12 @@ public class Buoyancy : MonoBehaviour
 	{
 		underwaterVerts = 0;
 
-		//start threading now
-		
 		for (byte index = 0; index < meshNormalsLength; index++)
 		{
 			worldVertPos = transformPos + (transformRotate * meshVerticies[index]);
 
-			// Splashes only on surface of water plane
 			if (worldVertPos.y < waterLineHack - 0.1f)
 			{
-				// if (rbVelocity.magnitude > splashVelocityThreshold || rb.angularVelocity.magnitude > splashVelocityThreshold)
-				// {
-				// 	OnSplash.Invoke(gameObject, worldVertPos, rbVelocity);
-				// }
-				
 				forceAmount = -meshNormals[index] * (forceScalar * Time.deltaTime);
                 forcePosition = transformPos + (transformRotate * meshVerticies[index]);
                 rb.AddForceAtPosition(forceAmount, forcePosition, ForceMode.Force);
@@ -74,18 +68,18 @@ public class Buoyancy : MonoBehaviour
 			}
 			
 			if (worldVertPos.y < waterLineHack - 10f) // HACK to remove sunken boats
-			{
-				DestroyParentGO();
-				break;
-			}
-
-			// Drag for percentage underwater
-			rbDragValue = (underwaterVerts / (float)meshVerticiesLength) * dragScalar;
-			rb.drag = rbDragValue;
-			rb.angularDrag = rbDragValue;
+            {
+             	DestroyParentGO();
+                break;
+            }
 		}
+		
+		// Drag for percentage underwater
+        rbDragValue = (underwaterVerts / (float)meshVerticiesLength) * dragScalar;
+        rb.drag = rbDragValue;
+        rb.angularDrag = rbDragValue;
 	}
-
+	
 	private void DestroyParentGO()
 	{
 		//OnDestroyed.Invoke(gameObject);
