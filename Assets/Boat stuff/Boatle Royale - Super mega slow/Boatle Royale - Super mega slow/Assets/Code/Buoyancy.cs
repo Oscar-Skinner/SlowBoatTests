@@ -5,12 +5,11 @@ using Unity.Mathematics;
 using System.Threading;
 using System.Threading.Tasks;
 
-// Cams mostly hack buoyancy
 public class Buoyancy : MonoBehaviour
 {
 	//public byte splashVelocityThreshold;
 	public float forceScalar;
-	public byte waterLineHack; // HACK
+	public byte waterLineHack;    
 
 	private byte underwaterVerts;
 	public float dragScalar;
