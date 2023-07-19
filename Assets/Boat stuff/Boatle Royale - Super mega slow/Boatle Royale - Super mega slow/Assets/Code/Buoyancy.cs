@@ -2,8 +2,6 @@
 using System.Collections;
 using UnityEngine;
 using Unity.Mathematics;
-using System.Threading;
-using System.Threading.Tasks;
 
 public class Buoyancy : MonoBehaviour
 {
